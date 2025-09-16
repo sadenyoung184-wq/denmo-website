@@ -144,3 +144,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial setup on page load
     setupServices();
 });
+
