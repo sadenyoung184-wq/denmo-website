@@ -34,31 +34,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { rootMargin: '-40% 0px -60% 0px' });
     sections.forEach(section => navObserver.observe(section));
 
-    // --- 3. Modal Functionality (Unchanged) ---
-    // This part remains the same as your provided file.
+    // --- 3. Modal Functionality ---
+    const openModalButtons = document.querySelectorAll('[data-modal-target]');
+    const closeModalButtons = document.querySelectorAll('.modal-close');
+    
+    function openModal(modal) {
+        if (modal == null) return;
+        modal.classList.add('active');
+    }
+    
+    function closeModal(modal) {
+        if (modal == null) return;
+        modal.classList.remove('active');
+    }
 
-    // --- 4. Responsive Services Section - CORRECTED LOGIC ---
+    openModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.querySelector(button.dataset.modalTarget);
+            openModal(modal);
+        });
+    });
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal-backdrop');
+            closeModal(modal);
+        });
+    });
+
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal(modal);
+            }
+        });
+    });
+
+    // --- 4. Responsive Services Section (Tabs & Accordion) - CORRECTED LOGIC ---
     const tabButtons = document.querySelectorAll('.tab-button');
-    const serviceContents = document.querySelectorAll('.services-wrapper .service-content');
     const accordionToggles = document.querySelectorAll('.accordion-toggle');
+    const serviceContents = document.querySelectorAll('.services-wrapper .service-content');
 
     function initializeServiceView() {
         if (window.innerWidth > 768) {
-            // Desktop view: ensure first tab is active
-            serviceContents.forEach((content, index) => {
-                const isActive = index === 0;
-                content.classList.toggle('active', isActive);
-            });
-            tabButtons.forEach((button, index) => {
-                button.classList.toggle('active', index === 0);
-            });
+            // Desktop: Activate the first tab
+            if (tabButtons.length > 0) {
+                tabButtons[0].classList.add('active');
+            }
+            if (serviceContents.length > 0) {
+                serviceContents[0].classList.add('active');
+            }
         } else {
-            // Mobile view: ensure first accordion is open
-            serviceContents.forEach((content, index) => {
-                const isActive = index === 0;
-                content.classList.toggle('active', isActive);
-                content.querySelector('.accordion-toggle').setAttribute('aria-expanded', isActive);
-            });
+            // Mobile: Activate the first accordion item
+            if (accordionToggles.length > 0) {
+                accordionToggles[0].setAttribute('aria-expanded', 'true');
+            }
+            if (serviceContents.length > 0) {
+                serviceContents[0].classList.add('active');
+            }
         }
     }
 
@@ -83,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             serviceContents.forEach(c => c.classList.remove('active'));
             accordionToggles.forEach(t => t.setAttribute('aria-expanded', 'false'));
             
-            // Open the clicked one if it was previously closed
+            // Open the clicked one if it was not already open
             if (!isExpanded) {
                 parentContent.classList.add('active');
                 e.currentTarget.setAttribute('aria-expanded', 'true');
@@ -107,8 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize the view on page load
+    // Initialize the view when the page loads
     initializeServiceView();
-    // Re-initialize on window resize to switch between modes
+    // Re-initialize the view when the window is resized
     window.addEventListener('resize', initializeServiceView);
 });
