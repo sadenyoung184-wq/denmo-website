@@ -16,28 +16,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section[id]');
     const navLinks = document.querySelectorAll('.main-nav a.nav-link');
     const navObserver = new IntersectionObserver((entries) => {
+        let currentSectionId = '';
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${id}`) {
-                        link.classList.add('active');
-                    }
-                });
+                currentSectionId = entry.target.getAttribute('id');
             }
         });
+
+        if (currentSectionId) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
     }, { rootMargin: '-40% 0px -60% 0px' });
     sections.forEach(section => navObserver.observe(section));
 
-    // --- 3. Modal Functionality with Focus Trap ---
+    // --- 3. Modal Functionality ---
     const openModalButtons = document.querySelectorAll('[data-modal-target]');
     const closeModalButtons = document.querySelectorAll('.modal-close');
     
     const openModal = (modal) => {
         if (!modal) return;
         modal.classList.add('active');
-        trapFocus(modal);
     };
     const closeModal = (modal) => {
         if (!modal) return;
@@ -52,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     closeModalButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
+        button.addEventListener('click', () => {
             const modal = button.closest('.modal-backdrop');
             closeModal(modal);
         });
@@ -71,53 +74,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function trapFocus(element) {
-        const focusableEls = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (focusableEls.length === 0) return;
-        const firstFocusableEl = focusableEls[0];
-        const lastFocusableEl = focusableEls[focusableEls.length - 1];
-        
-        element.addEventListener('keydown', function(e) {
-            if (e.key !== 'Tab') return;
-            if (e.shiftKey) {
-                if (document.activeElement === firstFocusableEl) {
-                    lastFocusableEl.focus();
-                    e.preventDefault();
-                }
-            } else {
-                if (document.activeElement === lastFocusableEl) {
-                    firstFocusableEl.focus();
-                    e.preventDefault();
-                }
-            }
-        });
-        if (firstFocusableEl) {
-           firstFocusableEl.focus();
-        }
-    }
-
-    // --- 4. Responsive Services Section (Tabs on Desktop, Accordion on Mobile) ---
+    // --- 4. Responsive Services Section (Tabs & Accordion) - CORRECTED LOGIC ---
+    const tabsContainer = document.querySelector('.tabs-container');
     const tabButtons = document.querySelectorAll('.tab-button');
-    const accordionToggles = document.querySelectorAll('.accordion-toggle');
     const serviceContents = document.querySelectorAll('.services-wrapper .service-content');
+    const accordionToggles = document.querySelectorAll('.accordion-toggle');
 
-    function activateTab(targetId) {
-        serviceContents.forEach(content => {
-            content.classList.remove('active');
-            content.style.maxHeight = null; 
-        });
-        tabButtons.forEach(button => button.classList.remove('active'));
-
-        const targetContent = document.querySelector(targetId);
-        const targetButton = document.querySelector(`[data-target="${targetId}"]`);
-
-        if (targetContent) targetContent.classList.add('active');
-        if (targetButton) targetButton.classList.add('active');
+    function setupServices() {
+        if (window.innerWidth > 768) {
+            // DESKTOP: TAB LOGIC
+            // Ensure first tab is active by default
+            const hasActiveTab = document.querySelector('.tab-button.active');
+            if (!hasActiveTab) {
+                tabButtons[0].classList.add('active');
+                serviceContents[0].classList.add('active');
+            }
+        } else {
+            // MOBILE: ACCORDION LOGIC
+            // Ensure first accordion is open by default
+            accordionToggles[0].setAttribute('aria-expanded', 'true');
+            serviceContents[0].classList.add('active');
+        }
     }
 
     tabButtons.forEach(button => {
         button.addEventListener('click', (e) => {
-            activateTab(e.currentTarget.dataset.target);
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            
+            serviceContents.forEach(content => content.classList.remove('active'));
+            document.querySelector(e.currentTarget.dataset.target).classList.add('active');
         });
     });
 
@@ -125,19 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.addEventListener('click', (e) => {
             const contentDiv = e.currentTarget.parentElement;
             const isExpanded = contentDiv.classList.contains('active');
-
+            
             // Close all
             serviceContents.forEach(c => c.classList.remove('active'));
             accordionToggles.forEach(t => t.setAttribute('aria-expanded', 'false'));
             
-            // Open the clicked one if it was closed
+            // Open the clicked one if it was previously closed
             if (!isExpanded) {
                 contentDiv.classList.add('active');
                 e.currentTarget.setAttribute('aria-expanded', 'true');
             }
         });
     });
-
+    
     // --- 5. FAQ Accordion ---
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(question => {
@@ -146,9 +132,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
             
             e.currentTarget.setAttribute('aria-expanded', !isExpanded);
-            e.currentTarget.querySelector('.faq-icon').textContent = !isExpanded ? '▲' : '▼';
-            answer.style.maxHeight = !isExpanded ? answer.scrollHeight + 'px' : '0';
+
+            if (!isExpanded) {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            } else {
+                answer.style.maxHeight = '0';
+            }
         });
     });
 
+    // Initial setup on page load
+    setupServices();
 });
