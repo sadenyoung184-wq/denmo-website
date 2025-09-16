@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    
     // --- 1. Scroll-triggered Animations ---
     const fadeInSections = document.querySelectorAll('.fade-in-section');
     const sectionObserver = new IntersectionObserver((entries, observer) => {
@@ -13,20 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
     fadeInSections.forEach(section => sectionObserver.observe(section));
 
     // --- 2. Smart Navigation ---
-    const sections = document.querySelectorAll('section[id]');
+    const sections = document.querySelectorAll('main section[id]');
     const navLinks = document.querySelectorAll('.main-nav a.nav-link');
     const navObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                    if (link.getAttribute('href') === `#${id}`) {
                         link.classList.add('active');
                     }
                 });
             }
         });
-    }, { rootMargin: '-30% 0px -70% 0px' }); // Activates when section is in the middle 40% of the screen
+    }, { rootMargin: '-40% 0px -60% 0px' });
     sections.forEach(section => navObserver.observe(section));
 
     // --- 3. Modal Functionality with Focus Trap ---
@@ -90,49 +91,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        firstFocusableEl.focus();
-    }
-
-    // --- 4. Responsive Services Section (Tabs on Desktop, Accordion on Mobile) ---
-    const servicesWrapper = document.querySelector('.services-wrapper');
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const serviceContents = document.querySelectorAll('.service-content');
-    const accordionToggles = document.querySelectorAll('.accordion-toggle');
-
-    function handleTabs(e) {
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-        
-        serviceContents.forEach(content => content.classList.remove('active'));
-        document.querySelector(e.currentTarget.dataset.target).classList.add('active');
-    }
-
-    function handleAccordion(e) {
-        const content = e.currentTarget.nextElementSibling;
-        const isExpanded = content.classList.contains('active');
-        
-        // Close all others
-        serviceContents.forEach(c => c.classList.remove('active'));
-        
-        // Open the clicked one if it was closed
-        if (!isExpanded) {
-            content.classList.add('active');
+        if (firstFocusableEl) {
+           firstFocusableEl.focus();
         }
     }
 
-    tabButtons.forEach(button => button.addEventListener('click', handleTabs));
-    accordionToggles.forEach(toggle => toggle.addEventListener('click', handleAccordion));
-    
+    // --- 4. Responsive Services Section (Tabs on Desktop, Accordion on Mobile) ---
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const accordionToggles = document.querySelectorAll('.accordion-toggle');
+    const serviceContents = document.querySelectorAll('.services-wrapper .service-content');
+
+    function activateTab(targetId) {
+        serviceContents.forEach(content => {
+            content.classList.remove('active');
+            content.style.maxHeight = null; 
+        });
+        tabButtons.forEach(button => button.classList.remove('active'));
+
+        const targetContent = document.querySelector(targetId);
+        const targetButton = document.querySelector(`[data-target="${targetId}"]`);
+
+        if (targetContent) targetContent.classList.add('active');
+        if (targetButton) targetButton.classList.add('active');
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            activateTab(e.currentTarget.dataset.target);
+        });
+    });
+
+    accordionToggles.forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            const contentDiv = e.currentTarget.parentElement;
+            const isExpanded = contentDiv.classList.contains('active');
+
+            // Close all
+            serviceContents.forEach(c => c.classList.remove('active'));
+            accordionToggles.forEach(t => t.setAttribute('aria-expanded', 'false'));
+            
+            // Open the clicked one if it was closed
+            if (!isExpanded) {
+                contentDiv.classList.add('active');
+                e.currentTarget.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
 
     // --- 5. FAQ Accordion ---
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(question => {
-        question.addEventListener('click', () => {
-            const answer = question.nextElementSibling;
-            const isExpanded = question.getAttribute('aria-expanded') === 'true';
+        question.addEventListener('click', (e) => {
+            const answer = e.currentTarget.nextElementSibling;
+            const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
             
-            question.setAttribute('aria-expanded', !isExpanded);
-            question.querySelector('.faq-icon').textContent = !isExpanded ? '▲' : '▼';
+            e.currentTarget.setAttribute('aria-expanded', !isExpanded);
+            e.currentTarget.querySelector('.faq-icon').textContent = !isExpanded ? '▲' : '▼';
             answer.style.maxHeight = !isExpanded ? answer.scrollHeight + 'px' : '0';
         });
     });
