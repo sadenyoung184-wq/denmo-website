@@ -70,6 +70,14 @@ section { padding: 80px 0; overflow: hidden; }
 .section-title h2 { font-size: 2.2rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px;}
 .section-title p { font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 10px auto 0; }
 
+/* NEW Stats Section */
+.stats-section { padding: 60px 0; background-color: var(--bg-white); }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.stat-card { text-align: center; }
+.stat-icon { font-size: 3rem; color: var(--primary-blue); }
+.stat-number { font-size: 2.5rem; font-weight: 800; color: var(--text-dark); margin: 10px 0; }
+.stat-title { font-size: 1.1rem; color: var(--text-muted); margin: 0; }
+
 /* About Me, Why Denmo, & AI Sections */
 .about-me-content { max-width: 800px; margin: 0 auto; text-align: justify; background-color: var(--bg-white); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); }
 .about-me-content h3 { font-size: 1.5rem; color: var(--primary-blue); text-align: center; margin-top: 0; margin-bottom: 25px; }
@@ -100,7 +108,6 @@ section { padding: 80px 0; overflow: hidden; }
     flex-shrink: 0;
 }
 .details-btn:hover { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
-
 .accordion-toggle { display: none; }
 .tabs-container { display: flex; justify-content: center; margin-bottom: 40px; background-color: var(--primary-blue-light); border-radius: 50px; padding: 5px; width: fit-content; margin: 0 auto 40px auto; }
 .tab-button { padding: 10px 30px; border: none; background: none; font-family: 'Vazirmatn', sans-serif; font-weight: 700; font-size: 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s; color: var(--primary-blue); }
@@ -135,6 +142,7 @@ section { padding: 80px 0; overflow: hidden; }
     .hero-section .container { flex-direction: column; text-align: center; }
     .hero-content { text-align: center; }
     .hero-image img { max-width: 50%; }
+    .stats-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 768px) {
     .main-nav, .tabs-container { display: none; }
@@ -155,7 +163,7 @@ section { padding: 80px 0; overflow: hidden; }
     .accordion-toggle::after { content: '+'; font-size: 2rem; font-weight: 300; color: var(--primary-blue); transition: transform 0.3s; }
     .accordion-toggle[aria-expanded="true"]::after { transform: rotate(45deg); }
     .service-content { display: block !important; max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-    .service-content.active { max-height: 1000px; /* A large enough value to show all content */ }
+    .service-content.active { max-height: 1000px; }
     .service-plan { flex-direction: column; text-align: center; padding: 20px; gap: 20px; box-shadow: none; border: 1px solid var(--border-color); border-top: none; margin-top: -11px; margin-bottom: 10px; border-radius: 0 0 10px 10px; }
     .service-plan ul {text-align: right;}
 }
