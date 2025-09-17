@@ -131,4 +131,10 @@ section { padding: 80px 0; overflow: hidden; }
     .service-content.active .service-plan-content { max-height: 1000px; /* Large enough value */ }
     .service-plan-content { flex-direction: column; text-align: center; padding: 20px; gap: 20px; }
     .service-plan-content ul {text-align: right;}
+    .konkor img {
+    height: 50px; /* ارتفاع لوگو را اینجا تنظیم کنید */
+    width: auto;  /* عرض به صورت خودکار تنظیم می‌شود */
+    vertical-align: middle; /* برای تراز عمودی بهتر */
 }
+}
+
