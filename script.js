@@ -1,29 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Hamburger Menu Script ---
-    const hamburger = document.querySelector('.hamburger-menu');
-    const mobileNav = document.querySelector('.mobile-nav');
-    const overlay = document.querySelector('.overlay');
-    const body = document.body;
-
-    const toggleNav = () => {
-        mobileNav.classList.toggle('open');
-        overlay.classList.toggle('active');
-        body.classList.toggle('nav-open');
-    };
-
-    hamburger.addEventListener('click', toggleNav);
-    overlay.addEventListener('click', toggleNav);
-
-    // Close nav when a link is clicked
-    mobileNav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-             if (mobileNav.classList.contains('open')) {
-                toggleNav();
-            }
-        });
-    });
-
     // --- Modal Script with Focus Trap ---
     const openModalButtons = document.querySelectorAll('[data-modal-target]');
     const closeModalButtons = document.querySelectorAll('.modal-close');
@@ -96,57 +72,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- Services Tabs Script (for both Desktop and Mobile Nav) ---
-    function initializeTabs(containerSelector) {
-        const container = document.querySelector(containerSelector);
-        if (!container) return;
+    // --- Desktop Tabs & Mobile Accordion for Services ---
+    const serviceToggles = document.querySelectorAll('.service-toggle');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-        const tabButtons = container.querySelectorAll('.tab-button');
-        const tabContents = container.querySelectorAll('.tab-content');
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                const targetContent = container.querySelector(`#${button.dataset.tab}`);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
+    function handleServiceView() {
+        if (window.innerWidth <= 768) {
+            // Mobile Accordion Logic
+            serviceToggles.forEach(toggle => {
+                const content = toggle.nextElementSibling;
+                // Set initial state
+                const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : '0';
             });
-        });
+        } else {
+            // Desktop Tabs Logic
+            // Reset any open accordions
+            serviceToggles.forEach(toggle => {
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.nextElementSibling.style.maxHeight = null;
+            });
+            // Ensure the active tab is displayed
+            const activeTab = document.querySelector('.tab-button.active');
+            if(activeTab){
+                const activeContent = document.querySelector(activeTab.dataset.tab.replace('tab', '#tab'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                if(activeContent) activeContent.classList.add('active');
+            }
+        }
     }
 
-    // Initialize tabs for the version inside the mobile navigation
-    initializeTabs('.mobile-services-container');
-    
-    // Initialize tabs for the desktop version
-    // We modify the data-tab and id attributes in HTML to avoid conflicts
-    const desktopServiceSection = document.querySelector('#services.desktop-only');
-    if (desktopServiceSection) {
-        const tabButtons = desktopServiceSection.querySelectorAll('.tab-button');
-        const tabContents = desktopServiceSection.querySelectorAll('.tab-content');
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                const targetContent = desktopServiceSection.querySelector(`#${button.dataset.tab}`);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
+    serviceToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            if (window.innerWidth > 768) return; // Only run on mobile
+            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            
+            // Close all accordions before opening the new one
+            serviceToggles.forEach(t => {
+                t.setAttribute('aria-expanded', 'false');
+                t.nextElementSibling.style.maxHeight = 0;
             });
+            
+            if (!isExpanded) {
+                toggle.setAttribute('aria-expanded', 'true');
+                const content = toggle.nextElementSibling;
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
         });
-    }
+    });
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (window.innerWidth <= 768) return; // Only run on desktop
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector(button.dataset.tab.replace('tab', '#tab')).classList.add('active');
+        });
+    });
 
 
     // --- FAQ Accordion ---
@@ -162,4 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Initial setup on load and resize
+    handleServiceView();
+    window.addEventListener('resize', handleServiceView);
 });
+
+
