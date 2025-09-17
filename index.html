@@ -35,6 +35,7 @@
     </header>
 
     <main>
+        <!-- بخش hero -->
         <section id="hero" class="hero-section fade-in-section">
             <div class="container">
                 <div class="hero-content">
@@ -47,7 +48,8 @@
                 </div>
             </div>
         </section>
-        
+
+        <!-- بخش about-me -->
         <section id="about-me" class="bg-light fade-in-section">
             <div class="container">
                 <div class="section-title">
@@ -62,13 +64,14 @@
             </div>
         </section>
 
+        <!-- بخش Services -->
         <section id="services" class="bg-light fade-in-section">
             <div class="container">
                 <div class="section-title">
                     <h2>🚀 طرح‌های مشاوره</h2>
                     <p>بسته‌ای را انتخاب کنید که کاملاً با نیازها و اهداف شما برای موفقیت در کنکور هماهنگ است.</p>
                 </div>
-                
+
                 <div class="services-container">
                     <div class="tabs-container">
                         <button class="tab-button active" data-target="#plan-jame">طرح جامع</button>
@@ -96,9 +99,9 @@
                         </div>
 
                         <div id="plan-azmoon" class="service-content">
-                             <button class="accordion-toggle" aria-expanded="false"><h3>طرح آزمون‌محور</h3></button>
-                             <div class="service-plan-content">
-                               <div class="service-details">
+                            <button class="accordion-toggle" aria-expanded="false"><h3>طرح آزمون‌محور</h3></button>
+                            <div class="service-plan-content">
+                                <div class="service-details">
                                     <ul>
                                         <li class="feature-item"><span>💎 پک تقلب: پک افزایش تراز</span><button type="button" class="details-btn" data-modal-target="#modal-booster-pack">توضیحات بیشتر</button></li>
                                         <li class="feature-item"><span>📊 پیگیری گزارش کار روزانه</span><button type="button" class="details-btn" data-modal-target="#modal-followup">توضیحات بیشتر</button></li>
@@ -111,10 +114,10 @@
                                 <div class="price">۱,۱۵۰,۰۰۰ تومان<span>/ ماهانه</span></div>
                             </div>
                         </div>
-                        
+
                         <div id="plan-payesh" class="service-content">
-                             <button class="accordion-toggle" aria-expanded="false"><h3>طرح پایش</h3></button>
-                             <div class="service-plan-content">
+                            <button class="accordion-toggle" aria-expanded="false"><h3>طرح پایش</h3></button>
+                            <div class="service-plan-content">
                                 <div class="service-details">
                                     <ul>
                                         <li class="feature-item"><span>💎 پک تقلب: پک افزایش تراز</span><button type="button" class="details-btn" data-modal-target="#modal-booster-pack">توضیحات بیشتر</button></li>
@@ -132,18 +135,73 @@
             </div>
         </section>
 
-        </main>
+    </main>
 
+    <!-- Footer -->
     <footer class="main-footer">
         <p>تمامی حقوق برای دن مو محفوظ است. © 2025</p>
     </footer>
 
-    <div id="modal-booster-pack" class="modal-backdrop" aria-hidden="true"><div class="modal-content"><button type="button" class="modal-close" aria-label="Close">&times;</button><h2 class="modal-title">💎 پک تقلب: پک افزایش تراز</h2><div class="modal-body"></div></div></div>
+    <!-- Modals -->
+    <div id="modal-booster-pack" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">💎 پک تقلب: پک افزایش تراز</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="modal-followup" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">📊 پیگیری گزارش کار روزانه</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="modal-planning" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">📅 برنامه‌ریزی هفتگی/روزانه</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="modal-quizzes" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">📝 کوییز بعد از هر فصل و شبانه</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="modal-analysis" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">📈 تحلیل آزمون‌ها</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="modal-weekly-call" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">📞 تماس هفتگی با مشاور</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="modal-chatbot" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">🤖 رفع اشکال صبحانه با AI</h2>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 
 </body>
 </html>
-
-
 
 
